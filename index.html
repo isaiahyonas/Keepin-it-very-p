@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Keepin' It Very P — "Stay Solid P"</title>
+<meta name="description" content="Keepin' It Very P. Tucson's very own. Drop 01 lands soon — get on the list first.">
+<meta property="og:title" content="Keepin' It Very P">
+<meta property="og:description" content="&quot;Stay Solid P&quot; — Drop 01 lands soon. Get on the list first.">
+<meta property="og:image" content="/lookbook/stay-solid-p-tee.jpg">
+<meta name="theme-color" content="#ffffff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#fff;color:#111}
+body{font-family:'Space Mono',ui-monospace,monospace;-webkit-font-smoothing:antialiased}
+button{font-family:inherit}
+[hidden]{display:none!important}
+
+/* ---------- Intro: the break ---------- */
+.intro{position:fixed;inset:0;overflow:hidden;background:#fff;transition:opacity .5s ease}
+.intro.leaving{opacity:0}
+.stage{position:absolute;left:50%;top:50%;width:720px;height:540px;transform-origin:50% 50%}
+.b{position:absolute;width:64px;height:64px;border-radius:50%;overflow:hidden;box-shadow:0 8px 14px rgba(0,0,0,.16);transition:left .95s cubic-bezier(.12,.8,.25,1) .22s,top .95s cubic-bezier(.12,.8,.25,1) .22s}
+.b .spot{position:absolute;left:28%;top:28%;width:44%;height:44%;border-radius:50%;background:#f6f1e6;display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:15px;color:#111}
+.shine{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 26%,rgba(255,255,255,.6) 0,rgba(255,255,255,0) 24%)}
+.bs{left:264px;top:150px}.bo{left:328px;top:150px}.bl{left:392px;top:150px}
+.bi{left:296px;top:205px}.bd{left:360px;top:205px}.bp{left:328px;top:260px}
+.cue{position:absolute;left:336px;top:440px;width:48px;height:48px;border-radius:50%;background:radial-gradient(circle at 36% 30%,#fff,#ece8e0 50%,#b9b2a4 92%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08),0 8px 14px rgba(0,0,0,.16)}
+.broken .bs{left:196px;top:206px}.broken .bo{left:262px;top:238px}.broken .bl{left:328px;top:206px}
+.broken .bi{left:394px;top:238px}.broken .bd{left:460px;top:206px}.broken .bp{left:328px;top:318px}
+.broken .cue{animation:strike .7s ease-out forwards}
+.stay{position:absolute;left:0;right:0;top:132px;text-align:center;font-family:'Archivo Black',sans-serif;font-size:76px;line-height:1;opacity:0;transform:translateY(10px);transition:opacity .6s ease 1.1s,transform .6s ease 1.1s}
+.broken .stay{opacity:1;transform:none}
+.prompt{position:absolute;left:0;right:0;top:500px;text-align:center;font-size:13px;font-weight:700;letter-spacing:5px;animation:blink 1.8s ease-in-out infinite alternate}
+.hit{position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hit:focus-visible{outline:3px solid #111;outline-offset:-8px}
+@keyframes strike{0%{top:440px;opacity:1}30%{top:326px}100%{top:470px;opacity:0}}
+@keyframes blink{from{opacity:1}to{opacity:.25}}
+
+/* ---------- Ball colors (shared) ---------- */
+.cS{background:radial-gradient(circle at 36% 30%,#5a78c9,#25409a 50%,#0f1c4a 88%)}
+.cT{background:radial-gradient(circle at 36% 30%,#f5a463,#d8661a 50%,#5e2a06 88%)}
+.cA{background:radial-gradient(circle at 36% 30%,#b8585d,#7a1f24 50%,#2e0a0c 88%)}
+.cY{background:radial-gradient(circle at 36% 30%,rgba(255,255,255,.35),rgba(255,255,255,0) 40%,rgba(0,0,0,.32) 92%),linear-gradient(#f4efe4 0 27%,#e3b21d 27% 73%,#f4efe4 73%)}
+.cO{background:radial-gradient(circle at 36% 30%,#e0675e,#b2271f 50%,#4f0e0a 88%)}
+.cL{background:radial-gradient(circle at 36% 30%,#f5d76a,#d9a91b 50%,#6b4e05 88%)}
+.cI{background:radial-gradient(circle at 36% 30%,#5fb46a,#257a30 50%,#0b3512 88%)}
+.cD{background:radial-gradient(circle at 36% 30%,#a35ab3,#6a2079 50%,#2c0733 88%)}
+.cP{background:radial-gradient(circle at 36% 30%,#55504a,#151311 50%,#000 88%)}
+
+/* ---------- Home: pattern + panels ---------- */
+.home{position:relative;min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:32px 20px 110px;animation:fade .7s ease both}
+.pattern{position:fixed;inset:-14px -30px;display:flex;flex-direction:column;gap:20px;pointer-events:none;z-index:0}
+.prow{display:flex;gap:34px}
+.prow.odd{margin-left:42px}
+.pb{position:relative;flex:none;width:50px;height:50px;border-radius:50%;overflow:hidden;box-shadow:0 5px 9px rgba(0,0,0,.14)}
+.pspin{position:absolute;inset:0}
+.pspot{position:absolute;left:28%;top:28%;width:44%;height:44%;border-radius:50%;background:#f6f1e6;display:flex;align-items:center;justify-content:center;animation:pspin 3s linear infinite}
+.pl{display:block;font-family:'Archivo',sans-serif;font-weight:800;font-size:12px;line-height:1;color:#111}
+@keyframes pspin{0%{transform:translateX(-250%) scaleX(.25)}50%{transform:translateX(0) scaleX(1)}100%{transform:translateX(250%) scaleX(.25)}}
+.sp1 .pspot{animation-duration:1.3s}.sp2 .pspot{animation-duration:2s}.sp3 .pspot{animation-duration:2.8s}.sp4 .pspot{animation-duration:3.7s}.sp5 .pspot{animation-duration:4.8s}.sp6 .pspot{animation-duration:6.2s}
+.rv .pspot{animation-direction:reverse}
+.d1 .pspot{animation-delay:-.5s}.d2 .pspot{animation-delay:-1.2s}.d3 .pspot{animation-delay:-2.1s}.d4 .pspot{animation-delay:-3s}
+.an1{transform:rotate(35deg)}.an1 .pl{transform:rotate(-35deg)}
+.an2{transform:rotate(-28deg)}.an2 .pl{transform:rotate(28deg)}
+.an3{transform:rotate(90deg)}.an3 .pl{transform:rotate(-90deg)}
+
+.panel{position:relative;z-index:1;width:100%;max-width:400px;background:#fff;border:2px solid #111;box-shadow:8px 8px 0 #111;padding:28px;text-align:center;display:flex;flex-direction:column;gap:12px}
+.eyebrow{font-size:10px;letter-spacing:3px}
+.headline{font-family:'Archivo Black',sans-serif;font-size:30px;line-height:1;white-space:nowrap}
+.copy{font-size:12px;line-height:1.5}
+.label{font-size:10px;letter-spacing:2px;font-weight:700}
+.field{width:100%;min-height:46px;padding:0 12px;border:2px solid #111;border-radius:0;font-family:inherit;font-size:16px;color:#111;background:#fff;text-align:center;-webkit-appearance:none}
+.field:focus{outline:3px solid #111;outline-offset:2px}
+.btn{min-height:46px;padding:0 18px;background:#111;color:#fff;border:0;border-radius:0;font-size:12px;font-weight:700;letter-spacing:3px;cursor:pointer}
+.btn:focus-visible{outline:3px solid #111;outline-offset:3px}
+.btn[disabled]{opacity:.6;cursor:wait}
+.form{display:flex;flex-direction:column;gap:12px}
+.error{font-size:11px;color:#c41e16;min-height:0}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.done{font-size:13px;line-height:1.5;font-weight:700}
+.lookbook img{width:100%;height:auto;display:block}
+.lookbook .headline{font-size:20px}
+.muted{font-size:10px;letter-spacing:2px;color:#555}
+.info .headline{font-size:32px}
+.final{font-size:13px;line-height:1.6;font-weight:700;letter-spacing:1px;color:#c41e16}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:2;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;padding:16px 12px calc(16px + env(safe-area-inset-bottom))}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+@media (max-width:420px){
+  .panel{padding:22px 16px}
+  .headline{font-size:24px}
+  .info .headline{font-size:26px}
+  .bar{gap:6px}
+  .bar .btn{padding:0 10px;font-size:11px;letter-spacing:1px}
+}
+@media (prefers-reduced-motion:reduce){
+  .pspot,.prompt{animation:none!important}
+  .b{transition-duration:.01s!important;transition-delay:0s!important}
+  .stay{transition-delay:0s!important}
+}
+</style>
+</head>
+<body>
+
+<main id="intro" class="intro">
+  <div id="stage" class="stage">
+    <div class="stay">STAY</div>
+    <div class="b bs cS"><div class="spot">S</div><div class="shine"></div></div>
+    <div class="b bo cO"><div class="spot">O</div><div class="shine"></div></div>
+    <div class="b bl cL"><div class="spot">L</div><div class="shine"></div></div>
+    <div class="b bi cI"><div class="spot">I</div><div class="shine"></div></div>
+    <div class="b bd cD"><div class="spot">D</div><div class="shine"></div></div>
+    <div class="b bp cP"><div class="spot">P</div><div class="shine"></div></div>
+    <div class="cue"></div>
+    <div id="prompt" class="prompt">CLICK TO BREAK</div>
+  </div>
+  <button id="hit" class="hit" aria-label="Break the rack"></button>
+</main>
+
+<div id="home" class="home" hidden>
+  <div id="pattern" class="pattern" aria-hidden="true"></div>
+
+  <section id="view-signup" class="panel" aria-labelledby="signup-title">
+    <div class="eyebrow">KEEPIN' IT VERY P PRESENTS</div>
+    <h1 id="signup-title" class="headline" style="margin:0">“STAY SOLID P”</h1>
+    <form id="form" class="form" novalidate>
+      <div class="copy">Drop 01 lands soon. Get on the list first.</div>
+      <label class="label" for="email">EMAIL</label>
+      <input id="email" name="email" class="field" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com" required maxlength="254">
+      <div class="hp" aria-hidden="true"><label for="company">Company</label><input id="company" name="company" type="text" tabindex="-1" autocomplete="off"></div>
+      <button id="submit" class="btn" type="submit">SIGN ME UP</button>
+      <div id="error" class="error" role="alert"></div>
+    </form>
+    <div id="done" class="done" hidden>You're on the list. Stay solid.</div>
+  </section>
+
+  <section id="view-lookbook" class="panel lookbook" aria-labelledby="lookbook-title" hidden>
+    <div class="eyebrow">LOOKBOOK</div>
+    <img src="/lookbook/stay-solid-p-tee.jpg" alt="White tee printed with STAY above S, O, L, I, D pool balls and a black P ball" width="1320" height="990">
+    <h2 id="lookbook-title" class="headline" style="margin:0">“STAY SOLID P” TEE</h2>
+    <div class="copy" style="letter-spacing:2px">WHITE · DROP 01</div>  </section>
+
+  <section id="view-info" class="panel info" aria-labelledby="info-title" hidden>
+    <div class="eyebrow">KEEPIN' IT VERY P</div>
+    <h2 id="info-title" class="headline" style="margin:0">TUCSON'S VERY OWN</h2>
+    <p class="final" style="margin:0">NO RETURNS. NO EXCHANGES.<br>ALL SALES ARE FINAL.</p>
+  </section>
+
+  <nav class="bar" aria-label="Site">
+    <button class="btn" type="button" data-view="signup" hidden>SIGN UP</button>
+    <button class="btn" type="button" data-view="lookbook">LOOKBOOK</button>
+    <button class="btn" type="button" data-view="info">INFO</button>
+    <button id="rerack" class="btn" type="button" aria-label="Re-rack and replay the intro">↺ RE-RACK</button>
+  </nav>
+</div>
+
+<script>
+(function () {
+  var intro = document.getElementById('intro');
+  var stage = document.getElementById('stage');
+  var hit = document.getElementById('hit');
+  var prompt = document.getElementById('prompt');
+  var home = document.getElementById('home');
+  var pattern = document.getElementById('pattern');
+  var state = 'racked';
+  var timer;
+
+  // Scale the 720x540 intro stage to fit any screen. The balls live in the
+  // middle ~440px, so phones scale by that width instead of the full stage.
+  function fitStage() {
+    var s = Math.min(window.innerWidth / 440, window.innerHeight / 560, 1.5);
+    stage.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
+  }
+  fitStage();
+  window.addEventListener('resize', fitStage);
+
+  hit.addEventListener('click', function () {
+    if (state === 'racked') {
+      state = 'breaking';
+      stage.classList.add('broken');
+      prompt.style.visibility = 'hidden';
+      hit.setAttribute('aria-label', 'Click to enter');
+      timer = setTimeout(function () {
+        state = 'ready';
+        prompt.textContent = 'CLICK TO ENTER';
+        prompt.style.visibility = 'visible';
+      }, 1700);
+    } else if (state === 'ready') {
+      enter();
+    }
+  });
+
+  function enter() {
+    state = 'entered';
+    intro.classList.add('leaving');
+    setTimeout(function () {
+      intro.hidden = true;
+      home.hidden = false;
+      buildPattern();
+      show('signup');
+    }, 450);
+  }
+
+  function rerack() {
+    clearTimeout(timer);
+    home.hidden = true;
+    pattern.innerHTML = '';
+    stage.classList.remove('broken');
+    prompt.textContent = 'CLICK TO BREAK';
+    prompt.style.visibility = 'visible';
+    hit.setAttribute('aria-label', 'Break the rack');
+    intro.hidden = false;
+    // force reflow so the rack snaps back before fading in
+    void intro.offsetWidth;
+    intro.classList.remove('leaving');
+    state = 'racked';
+    window.scrollTo(0, 0);
+  }
+  document.getElementById('rerack').addEventListener('click', rerack);
+
+  // All-over pattern: S T A Y S O L I D P balls spinning in place.
+  function buildPattern() {
+    var letters = 'STAYSOLIDP';
+    var cols = Math.ceil((window.innerWidth + 60) / 84) + 1;
+    var rows = Math.ceil((window.innerHeight + 28) / 70) + 1;
+    var html = '';
+    for (var r = 0; r < rows; r++) {
+      html += '<div class="prow' + (r % 2 ? ' odd' : '') + '">';
+      for (var c = 0; c < cols; c++) {
+        var k = r * 10 + c;
+        var l = letters.charAt((c + r * 3) % 10);
+        var spin = 'pspin sp' + (1 + ((k * 7 + r * 3) % 6)) + ' an' + ((k * 5 + c) % 4) + ' d' + ((k * 3 + r) % 5) + (k % 3 === 0 ? ' rv' : '');
+        html += '<div class="pb c' + l + '"><div class="' + spin + '"><div class="pspot"><span class="pl">' + l + '</span></div></div><div class="shine"></div></div>';
+      }
+      html += '</div>';
+    }
+    pattern.innerHTML = html;
+  }
+  var resizeT;
+  window.addEventListener('resize', function () {
+    if (home.hidden) return;
+    clearTimeout(resizeT);
+    resizeT = setTimeout(buildPattern, 200);
+  });
+
+  // Panels: signup / lookbook / info
+  var views = ['signup', 'lookbook', 'info'];
+  var navBtns = document.querySelectorAll('[data-view]');
+  function show(name) {
+    views.forEach(function (v) {
+      document.getElementById('view-' + v).hidden = v !== name;
+    });
+    navBtns.forEach(function (b) {
+      if (b.getAttribute('data-view') === 'signup') b.hidden = name === 'signup';
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === name));
+    });
+  }
+  navBtns.forEach(function (b) {
+    b.addEventListener('click', function () { show(b.getAttribute('data-view')); });
+  });
+
+  // Email signup
+  var form = document.getElementById('form');
+  var emailEl = document.getElementById('email');
+  var submit = document.getElementById('submit');
+  var errorEl = document.getElementById('error');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    errorEl.textContent = '';
+    var email = emailEl.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errorEl.textContent = 'Enter a valid email.';
+      emailEl.focus();
+      return;
+    }
+    submit.disabled = true;
+    submit.textContent = 'SENDING…';
+    fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, company: document.getElementById('company').value })
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (!res.ok || !data.ok) throw new Error(data.error || 'Something went wrong. Try again.');
+      });
+    }).then(function () {
+      form.hidden = true;
+      document.getElementById('done').hidden = false;
+    }).catch(function (err) {
+      errorEl.textContent = err.message;
+      submit.disabled = false;
+      submit.textContent = 'SIGN ME UP';
+    });
+  });
+})();
+</script>
+</body>
+</html>

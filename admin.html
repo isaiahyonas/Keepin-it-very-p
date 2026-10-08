@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — Keepin' It Very P</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:#111;font-family:'Space Mono',ui-monospace,monospace;-webkit-font-smoothing:antialiased}
+button{font-family:inherit}
+[hidden]{display:none!important}
+.wrap{max-width:860px;margin:0 auto;padding:32px 20px 64px}
+.eyebrow{font-size:10px;letter-spacing:3px}
+h1{font-family:'Archivo Black',sans-serif;font-size:32px;line-height:1;margin:6px 0 0}
+.card{border:2px solid #111;box-shadow:8px 8px 0 #111;background:#fff;padding:24px}
+.login{max-width:380px;margin:12vh auto 0;display:flex;flex-direction:column;gap:12px;text-align:center}
+.field{width:100%;min-height:46px;padding:0 12px;border:2px solid #111;border-radius:0;font-family:inherit;font-size:16px;background:#fff;color:#111;-webkit-appearance:none}
+.field:focus{outline:3px solid #111;outline-offset:2px}
+.btn{min-height:44px;padding:0 16px;background:#111;color:#fff;border:2px solid #111;border-radius:0;font-size:12px;font-weight:700;letter-spacing:2px;cursor:pointer}
+.btn.ghost{background:#fff;color:#111}
+.btn:focus-visible{outline:3px solid #111;outline-offset:3px}
+.btn[disabled]{opacity:.5;cursor:default}
+.error{font-size:12px;color:#c41e16;min-height:1em}
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px}
+.stats{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.stat{flex:1 1 160px;border:2px solid #111;padding:14px 16px}
+.stat .n{font-family:'Archivo Black',sans-serif;font-size:34px;line-height:1}
+.stat .k{font-size:10px;letter-spacing:2px;margin-top:6px}
+.tools{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.tools .field{flex:1 1 240px;min-height:44px}
+.table-box{border:2px solid #111;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid #ddd;white-space:nowrap}
+th{font-size:10px;letter-spacing:2px;background:#111;color:#fff;position:sticky;top:0}
+td.email{white-space:normal;word-break:break-all}
+tr:last-child td{border-bottom:0}
+.del{min-height:32px;padding:0 10px;font-size:11px;background:#fff;color:#c41e16;border:2px solid #c41e16;cursor:pointer;font-family:inherit;font-weight:700;letter-spacing:1px}
+.empty{padding:28px 12px;text-align:center;font-size:12px;color:#555}
+</style>
+</head>
+<body>
+
+<div id="login" class="wrap">
+  <form id="loginForm" class="card login">
+    <div class="eyebrow">KEEPIN' IT VERY P</div>
+    <h1>ADMIN</h1>
+    <label for="pw" style="font-size:10px;letter-spacing:2px;font-weight:700">PASSWORD</label>
+    <input id="pw" class="field" type="password" autocomplete="current-password" required>
+    <button class="btn" type="submit">LOG IN</button>
+    <div id="loginError" class="error" role="alert"></div>
+  </form>
+</div>
+
+<div id="app" class="wrap" hidden>
+  <div class="head">
+    <div>
+      <div class="eyebrow">KEEPIN' IT VERY P</div>
+      <h1>EMAIL LIST</h1>
+    </div>
+    <button id="logout" class="btn ghost" type="button">LOG OUT</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div id="total" class="n">0</div><div class="k">TOTAL SIGNUPS</div></div>
+    <div class="stat"><div id="week" class="n">0</div><div class="k">LAST 7 DAYS</div></div>
+    <div class="stat"><div id="today" class="n">0</div><div class="k">TODAY</div></div>
+  </div>
+
+  <div class="tools">
+    <label for="search" style="position:absolute;left:-9999px">Search emails</label>
+    <input id="search" class="field" type="search" placeholder="Search emails">
+    <button id="refresh" class="btn ghost" type="button">REFRESH</button>
+    <button id="csv" class="btn" type="button">DOWNLOAD CSV</button>
+  </div>
+  <div id="appError" class="error" role="alert"></div>
+
+  <div class="table-box">
+    <table>
+      <thead><tr><th>EMAIL</th><th>SIGNED UP</th><th><span style="position:absolute;left:-9999px">Actions</span></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div id="empty" class="empty" hidden>No signups yet.</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var KEY = 'kivp-admin-pw';
+  var all = [];
+  var pw = '';
+  try { pw = sessionStorage.getItem(KEY) || ''; } catch (e) {}
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function api(method, query) {
+    return fetch('/api/admin' + (query || ''), {
+      method: method,
+      headers: { 'x-admin-password': pw }
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (res.status === 401) { var e = new Error('Wrong password.'); e.auth = true; throw e; }
+        if (!res.ok || !data.ok) throw new Error(data.error || 'Request failed.');
+        return data;
+      });
+    });
+  }
+
+  function load() {
+    $('appError').textContent = '';
+    return api('GET').then(function (data) {
+      all = data.subscribers || [];
+      $('login').hidden = true;
+      $('app').hidden = false;
+      render();
+    });
+  }
+
+  function fmt(iso) {
+    var d = new Date(iso);
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) +
+      ' · ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  }
+
+  function render() {
+    var now = Date.now();
+    var startOfDay = new Date(); startOfDay.setHours(0, 0, 0, 0);
+    $('total').textContent = all.length;
+    $('week').textContent = all.filter(function (s) { return now - new Date(s.created_at) < 7 * 864e5; }).length;
+    $('today').textContent = all.filter(function (s) { return new Date(s.created_at) >= startOfDay; }).length;
+
+    var q = $('search').value.trim().toLowerCase();
+    var list = q ? all.filter(function (s) { return s.email.indexOf(q) !== -1; }) : all;
+    var tbody = $('rows');
+    tbody.innerHTML = '';
+    list.forEach(function (s) {
+      var tr = document.createElement('tr');
+      var td1 = document.createElement('td'); td1.className = 'email'; td1.textContent = s.email;
+      var td2 = document.createElement('td'); td2.textContent = fmt(s.created_at);
+      var td3 = document.createElement('td'); td3.style.textAlign = 'right';
+      var b = document.createElement('button');
+      b.className = 'del'; b.type = 'button'; b.textContent = 'DELETE';
+      b.setAttribute('aria-label', 'Delete ' + s.email);
+      b.addEventListener('click', function () { remove(s, b); });
+      td3.appendChild(b);
+      tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+      tbody.appendChild(tr);
+    });
+    $('empty').hidden = list.length > 0;
+    $('empty').textContent = all.length ? 'No emails match that search.' : 'No signups yet.';
+  }
+
+  function remove(s, btn) {
+    if (!confirm('Remove ' + s.email + ' from the list?')) return;
+    btn.disabled = true;
+    api('DELETE', '?id=' + encodeURIComponent(s.id)).then(function () {
+      all = all.filter(function (x) { return x.id !== s.id; });
+      render();
+    }).catch(function (err) {
+      btn.disabled = false;
+      handleErr(err);
+    });
+  }
+
+  function handleErr(err) {
+    if (err.auth) { logout(); $('loginError').textContent = 'Wrong password.'; return; }
+    $('appError').textContent = err.message;
+  }
+
+  function logout() {
+    pw = '';
+    try { sessionStorage.removeItem(KEY); } catch (e) {}
+    all = [];
+    $('app').hidden = true;
+    $('login').hidden = false;
+    $('pw').value = '';
+  }
+
+  function csvCell(v) {
+    v = String(v == null ? '' : v);
+    if (/^[=+\-@]/.test(v)) v = "'" + v; // keep spreadsheet apps from running it as a formula
+    return '"' + v.replace(/"/g, '""') + '"';
+  }
+
+  $('csv').addEventListener('click', function () {
+    var lines = [['email', 'signed_up', 'source'].join(',')];
+    all.forEach(function (s) { lines.push([csvCell(s.email), csvCell(s.created_at), csvCell(s.source)].join(',')); });
+    var blob = new Blob([lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'keepin-it-very-p-emails-' + new Date().toISOString().slice(0, 10) + '.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  });
+
+  $('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    $('loginError').textContent = '';
+    pw = $('pw').value;
+    load().then(function () {
+      try { sessionStorage.setItem(KEY, pw); } catch (e) {}
+    }).catch(function (err) {
+      pw = '';
+      $('loginError').textContent = err.message;
+    });
+  });
+
+  $('search').addEventListener('input', render);
+  $('refresh').addEventListener('click', function () { load().catch(handleErr); });
+  $('logout').addEventListener('click', logout);
+
+  if (pw) load().catch(function () { logout(); });
+})();
+</script>
+</body>
+</html>
