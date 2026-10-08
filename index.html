@@ -89,6 +89,7 @@ button{font-family:inherit}
 .final{font-size:13px;line-height:1.6;font-weight:700;letter-spacing:1px;color:#c41e16}
 .bar{position:fixed;left:0;right:0;bottom:0;z-index:2;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;padding:16px 12px calc(16px + env(safe-area-inset-bottom))}
 @keyframes fade{from{opacity:0}to{opacity:1}}
+.sound{position:fixed;top:calc(14px + env(safe-area-inset-top));right:14px;z-index:5;min-height:40px;padding:0 14px;font-size:11px;letter-spacing:2px}
 
 @media (max-width:420px){
   .panel{padding:22px 16px}
@@ -120,6 +121,8 @@ button{font-family:inherit}
   </div>
   <button id="hit" class="hit" aria-label="Break the rack"></button>
 </main>
+
+<button id="sound" class="btn sound" type="button" aria-pressed="true" hidden>SOUND: ON</button>
 
 <div id="home" class="home" hidden>
   <div id="pattern" class="pattern" aria-hidden="true"></div>
@@ -178,8 +181,57 @@ button{font-family:inherit}
   fitStage();
   window.addEventListener('resize', fitStage);
 
+  // ---------- Audio: one track (break + song), looped ----------
+  // Browsers only allow sound after a click/tap, so it starts on the
+  // "Click to break" click. Re-rack stops it; the next break starts it over.
+  var track = new Audio('/audio/site-sound.mp3');
+  track.preload = 'auto';
+  track.loop = true;
+  var soundBtn = document.getElementById('sound');
+  var muted = false;
+  try { muted = localStorage.getItem('kivp-muted') === '1'; } catch (e) {}
+  var playing = false;   // the track should be playing (used for tab switching)
+
+  function applyMute() {
+    track.muted = muted;
+    soundBtn.textContent = muted ? 'SOUND: OFF' : 'SOUND: ON';
+    soundBtn.setAttribute('aria-pressed', String(!muted));
+    soundBtn.setAttribute('aria-label', muted ? 'Sound is off. Turn sound on' : 'Sound is on. Turn sound off');
+  }
+  applyMute();
+
+  soundBtn.addEventListener('click', function () {
+    muted = !muted;
+    try { localStorage.setItem('kivp-muted', muted ? '1' : '0'); } catch (e) {}
+    applyMute();
+    // If playback was blocked earlier, this tap is a fresh chance to start it.
+    if (!muted && playing && track.paused) track.play().catch(function () {});
+  });
+
+  function startAudio() {
+    soundBtn.hidden = false;
+    playing = true;
+    try { track.currentTime = 0; } catch (e) {}
+    track.muted = muted;
+    track.play().catch(function () {});
+  }
+
+  function stopAudio() {
+    playing = false;
+    track.pause();
+    try { track.currentTime = 0; } catch (e) {}
+  }
+
+  // Pause while the tab is in the background, resume when they come back
+  document.addEventListener('visibilitychange', function () {
+    if (!playing) return;
+    if (document.hidden) track.pause();
+    else track.play().catch(function () {});
+  });
+
   hit.addEventListener('click', function () {
     if (state === 'racked') {
+      startAudio();
       state = 'breaking';
       stage.classList.add('broken');
       prompt.style.visibility = 'hidden';
@@ -207,6 +259,7 @@ button{font-family:inherit}
 
   function rerack() {
     clearTimeout(timer);
+    stopAudio();
     home.hidden = true;
     pattern.innerHTML = '';
     stage.classList.remove('broken');
